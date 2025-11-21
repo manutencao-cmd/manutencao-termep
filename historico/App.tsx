@@ -7,8 +7,8 @@ import ReportsPage from './pages/Reports';
 import CadastrosPage from './pages/Cadastros';
 import DiagnosticsPage from './pages/Diagnostics';
 import Login from './pages/Login';
-import { Equipment, Technician, MaintenanceRecord, Sector, Company, MaintenanceType } from './types';
-import { fetchEquipment, fetchTechnicians, fetchHistory, saveRecord, updateHistoryRecord, deleteHistoryRecord, fetchSectors, fetchCompanies, fetchMaintenanceTypes } from './services/sheetService';
+import { useAppData, useRecordOperations } from './hooks/useAppData';
+import { MaintenanceRecord } from './types';
 import { ExternalLink } from 'lucide-react';
 import { SHEET_ID } from './constants';
 import { useAuth } from './context/AuthContext';
@@ -16,86 +16,25 @@ import { useAuth } from './context/AuthContext';
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [technicians, setTechnicians] = useState<Technician[]>([]);
-  const [sectors, setSectors] = useState<Sector[]>([]);
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [maintenanceTypes, setMaintenanceTypes] = useState<MaintenanceType[]>([]);
-  const [history, setHistory] = useState<MaintenanceRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  // State for editing a record
   const [editingRecord, setEditingRecord] = useState<MaintenanceRecord | null>(null);
+  
+  const {
+    equipments,
+    technicians,
+    sectors,
+    companies,
+    maintenanceTypes,
+    history,
+    loading,
+    refreshData,
+    handleDeleteHistory,
+    refreshHistory
+  } = useAppData(isAuthenticated);
 
-  // Load data only if authenticated
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const loadData = async () => {
-      try {
-        const [eq, tec, his, sec, comp, types] = await Promise.all([
-          fetchEquipment(),
-          fetchTechnicians(),
-          fetchHistory(),
-          fetchSectors(),
-          fetchCompanies(),
-          fetchMaintenanceTypes()
-        ]);
-        setEquipments(eq);
-        setTechnicians(tec);
-        setHistory(his);
-        setSectors(sec);
-        setCompanies(comp);
-        setMaintenanceTypes(types);
-      } catch (err) {
-        console.error("Failed to load data", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [isAuthenticated]);
-
-  // Function to refresh data when changes occur in Cadastros
-  const refreshData = async () => {
-    try {
-      const [eq, tec, sec, comp, types] = await Promise.all([
-        fetchEquipment(),
-        fetchTechnicians(),
-        fetchSectors(),
-        fetchCompanies(),
-        fetchMaintenanceTypes()
-      ]);
-      setEquipments(eq);
-      setTechnicians(tec);
-      setSectors(sec);
-      setCompanies(comp);
-      setMaintenanceTypes(types);
-    } catch (err) {
-      console.error("Failed to refresh data", err);
-    }
-  };
-
-  const handleSaveRecord = async (record: MaintenanceRecord) => {
-    await saveRecord(record);
-    const updatedHistory = await fetchHistory();
-    setHistory(updatedHistory);
-    setCurrentPage('history');
-  };
-
-  const handleUpdateRecord = async (record: MaintenanceRecord) => {
-    await updateHistoryRecord(record);
-    const updatedHistory = await fetchHistory();
-    setHistory(updatedHistory);
-    setEditingRecord(null);
-    setCurrentPage('history');
-  };
-
-  const handleDeleteHistory = async (id: string) => {
-    await deleteHistoryRecord(id);
-    const updatedHistory = await fetchHistory();
-    setHistory(updatedHistory);
-  };
+  const {
+    handleSaveRecord,
+    handleUpdateRecord
+  } = useRecordOperations(refreshHistory, setCurrentPage);
 
   const handleEditHistory = (record: MaintenanceRecord) => {
     setEditingRecord(record);
