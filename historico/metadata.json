@@ -1,0 +1,5 @@
+{
+  "name": "HIST DE MANUTENÇÃO - TERMEP",
+  "description": "Aplicativo de controle de Manutenção Integrado ao Google Sheets com análise de IA via Gemini.",
+  "requestFramePermissions": []
+}
