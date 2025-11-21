@@ -1,14 +1,8 @@
 ```
-# Dependencies
-node_modules/
-
-# Build artifacts
-dist/
-build/
-*.js
-*.ts
-*.tsx
-*.jsx
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
@@ -18,39 +12,25 @@ build/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-
-# Python
+# Dependencies
+node_modules/
+venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Compiled files
-*.o
-*.obj
-*.out
-*.dll
+# Build artifacts
+dist/
+build/
 *.so
-*.a
+*.dll
+*.exe
+*.out
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Testing
-.mypy_cache/
-.pytest_cache/
-
-# System
+# System files
 .DS_Store
 Thumbs.db
 ```

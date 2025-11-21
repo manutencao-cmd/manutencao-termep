@@ -52,10 +52,39 @@ O projeto passou por uma série de refatorações para melhorar a arquitetura, m
 
 ## Como rodar
 
-1. Clone o repositório.
-2. Instale as dependências: `npm install`
-3. Crie um arquivo `.env` na raiz com sua chave API: `VITE_GEMINI_KEY=sua_chave_aqui`
-4. Rode o projeto: `npm run dev`
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/historico-manutencao-termep.git
+   cd historico-manutencao-termep
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+   
+   **Observação para ambientes com pouca memória (como alguns ambientes de desenvolvimento online):**
+   Se você encontrar erros de memória (código 137) durante a instalação, tente:
+   ```bash
+   # Configure o npm para usar menos recursos
+   npm config set maxsockets 1
+   npm config set progress false
+   
+   # Instale as dependências com menos paralelismo
+   npm install --no-audit --no-fund --no-optional
+   ```
+
+3. Crie um arquivo `.env.local` na raiz do projeto e adicione sua chave da API Gemini:
+   ```env
+   VITE_GEMINI_API_KEY=sua_chave_da_api_aqui
+   ```
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+5. Abra [http://localhost:5173](http://localhost:5173) no seu navegador para ver o resultado.
 
 ## Scripts Disponíveis
 
@@ -63,7 +92,7 @@ No diretório do projeto, você pode executar:
 
 ### `npm run dev`
 Executa o aplicativo no modo de desenvolvimento com Vite.
-Abra [http://localhost:3000](http://localhost:3000) para visualizá-lo no navegador.
+Abra [http://localhost:5173](http://localhost:5173) para visualizá-lo no navegador.
 
 ### `npm run build`
 Constrói o aplicativo para produção na pasta `dist`.
@@ -88,3 +117,14 @@ historico/
 ├── package.json       # Dependências e scripts
 └── vite.config.ts     # Configuração do Vite
 ```
+
+## Solução de Problemas
+
+### Erro de memória durante a instalação (código 137)
+Este erro ocorre em ambientes com pouca memória disponível. Tente executar o projeto em um ambiente local com mais recursos ou use um serviço de desenvolvimento em nuvem com mais RAM.
+
+### Porta padrão do Vite
+Por padrão, o Vite executa na porta 5173, não na 3000 como o Create React App. Certifique-se de acessar o aplicativo em [http://localhost:5173](http://localhost:5173).
+
+### Variáveis de ambiente
+Certifique-se de que o arquivo `.env.local` (e não `.env`) está sendo usado para variáveis de ambiente no Vite, e que ele está listado no `.gitignore` para segurança.
